@@ -17,30 +17,40 @@ def blink(y,n,t):
 
 def pulse_blink(t):
   tmp = 0
-  print "t= %d" %(t)
+  # print "t= %d" %(t)
   while (tmp < t):
-    print(tmp)
+    # print(tmp)
     blink(.1,.1,.4)
     time.sleep(.5)
     tmp += 1
     pass
   pass
 
-def check_network():
+def check_network_with_blink():
+    flag = -1
     while True:
         try:
             result=urllib.urlopen('http://baidu.com').read()
             print result
             print "Network is Ready!"
+            print "flag= %d" %(flag)
             blink(.5,.5,5)
+
+            if flag == 0: #send a mail when internet reconnects
+              print "=========Network reconnected!=========="
+              subprocess.Popen(['sudo python ./send_ip.py'], stdout=subprocess.PIPE, shell=True).communicate()[0] 
+              flag = 1
+              pass
+
             break
         except Exception , e:
            print e
            print "Network is not ready,Sleep 5s...."
+           flag = 0
+           print "flag= %d" %(flag)
            pulse_blink(5)
-           # time.sleep(5)
     return True
 
 while True:
-  check_network()
+  check_network_with_blink()
   pass
