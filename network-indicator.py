@@ -51,10 +51,6 @@ def check_network_with_blink():
            pulse_blink(5)
     return True
 
-while True:
-  check_network_with_blink()
-  pass
-
 def send_mail():
     # Settings
     fromaddr = 'qq859755014@126.com'
@@ -94,4 +90,8 @@ def send_mail():
     server.login(username,password)
     server.sendmail(fromaddr, toaddr, BODY)
     server.quit()
+pass
+
+while True:
+  check_network_with_blink()
 pass
