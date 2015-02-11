@@ -38,7 +38,7 @@ def check_network_with_blink():
 
             if flag == 0: #send a mail when internet reconnects
               print "=========Network reconnected!=========="
-              subprocess.Popen(['send_mail()'], stdout=subprocess.PIPE, shell=True).communicate()[0] 
+              send_mail()
               flag = 1
               pass
 
