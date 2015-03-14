@@ -98,6 +98,7 @@ def send_mail():
     server.quit()
 pass
 
+subprocess.Popen(['echo none > /sys/class/leds/led0/trigger'], stdout=subprocess.PIPE, shell=True).communicate()[0]
 while True:
   check_network_with_blink()
 pass
