@@ -69,7 +69,7 @@ def send_mail():
     output_ESSID = subprocess.Popen(['iwconfig wlan0|grep ESSID|cut -d " " -f 9|sed \'s/ESSID:"//g\'|sed \'s/"//g\''], stdout=subprocess.PIPE, shell=True).communicate()[0]
     output_inner_ip = subprocess.Popen(['echo $(hostname -I) || true'], stdout=subprocess.PIPE, shell=True).communicate()[0]
     
-    send_date = "Boot time: %s" % (output_date)
+    send_date = "Reconnected time: %s" % (output_date)
     send_temp = "Temperature: %s" % (output_temp)
     send_ip = "External IP: %s" % (output_ip)
     send_ESSID = "ESSID: %s" % (output_ESSID)
