@@ -1,5 +1,6 @@
 import smtplib, string, subprocess
 import time, urllib
+import os,sys,re
 
 def blink(y,n,t):
   tmp = 0
@@ -32,26 +33,21 @@ def pulse_blink(t):
 def check_network_with_blink():
     flag = -1
     while True:
-        try:
-            result=urllib.urlopen('http://baidu.com').read()
-            print result
-            print "Network is Ready!"
-            print "flag= %d" %(flag)
-            blink(.5,.5,5)
+      if NetCheck(ip):
+        print "Network is Ready!"
+        blink(.5,.5,5)
 
-            if flag == 0: #send a mail when internet reconnects
-              print "=========Network reconnected!=========="
-              send_mail()
-              flag = 1
-              pass
-
-            break
-        except Exception , e:
-           print e
-           print "Network is not ready,Sleep 5s...."
-           flag = 0
-           print "flag= %d" %(flag)
-           pulse_blink(5)
+        if flag == 0: #send a mail when internet reconnects
+          print "=========Network reconnected!=========="
+          send_mail()
+          flag = 1
+          pass
+          
+      else:
+        print "Network is not ready,Sleep 5s...."
+        pulse_blink(5)
+        flag = 0
+        pass
     return True
 
 def send_mail():
@@ -97,6 +93,25 @@ def send_mail():
     server.sendmail(fromaddr, toaddr, BODY)
     server.quit()
 pass
+
+def NetCheck(ip):
+   try:
+    p = subprocess.Popen(["ping -c 1 -w 1 "+ ip],stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=True)
+    out=p.stdout.read()
+    #err=p.stderr.read()
+    regex=re.compile('100% packet loss')
+    #print out
+    #print regex
+    #print err
+    if len(regex.findall(out)) == 0:
+        print ip + ': host up'
+        return 1 #'UP'
+    else:
+        print ip + ': host down'
+        return 0 #'DOWN'
+   except:
+    print 'NetCheck work error!'
+    return -1 #'ERR'
 
 subprocess.Popen(['echo none > /sys/class/leds/led0/trigger'], stdout=subprocess.PIPE, shell=True).communicate()[0]
 while True:
